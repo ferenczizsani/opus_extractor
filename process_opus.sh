@@ -18,10 +18,11 @@ for url in $(cat $output_folder/opus.json | grep -Po '"url":\K.*?[^\\]",') ; do
     wget -qO $file.gz ${url:1:${#url}-3}
     gzip -d $file.gz
     columns=`head -1 $file | wc -w`
+    #TODO ne csak egytagu szavakat tartsunk meg itt a ket grep-ben
     if [ $columns -ne 2 ]; then
-        cat $file | cut -f3-4 | sort -u | grep -P "^[a-zA-ZäöüáÄÖÜÁ0-9]+\s*[a-zA-Z0-9öüóőúűéáíÖÜÓŐÚŰÉÁÍ]+" >> $output_file
+        cat $file | cut -f3-4 | sort -u | grep -P "^([a-zA-ZäöüáÄÖÜÁ0-9]+\s*)+\s*([a-zA-Z0-9öüóőúűéáíÖÜÓŐÚŰÉÁÍ]+\s*)+" >> $output_file
     else 
-        cat $file | sort -u | grep -P "^[a-zA-ZäöüáÄÖÜÁ0-9]+\s*[a-zA-Z0-9öüóőúűéáíÖÜÓŐÚŰÉÁÍ]+" >> $output_file
+        cat $file | sort -u | grep -P "^([a-zA-ZäöüáÄÖÜÁ0-9]+\s*)+\s*([a-zA-Z0-9öüóőúűéáíÖÜÓŐÚŰÉÁÍ]+\s*)+" >> $output_file
     fi
     num=$((num+1))
 done
