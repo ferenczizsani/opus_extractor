@@ -3,16 +3,16 @@
 echo "Processing OPUS dictionaries..."
 
 output_folder=$1
-lang1=$2
-lang2=$3
+lang1="fi"
+lang2="hu"
 mkdir -p $output_folder 
 mkdir -p $output_folder/temp
 num=1
-output_file=$output_folder/opus_$lang1_$lang2.tsv
-curl -s "https://opus.nlpl.eu/opusapi/?source="$lang1"&target="$lang2"&preprocessing=dic&version=latest" > opus.json
+output_file=$output_folder"/opus_"$lang1"_"$lang2".tsv"
+curl -s "https://opus.nlpl.eu/opusapi/?source="$lang1"&target="$lang2"&preprocessing=dic&version=latest" > $output_folder/opus.json
 
 rm -f $output_file
-for url in $(cat opus.json | grep -Po '"url":\K.*?[^\\]",') ; do
+for url in $(cat $output_folder/opus.json | grep -Po '"url":\K.*?[^\\]",') ; do
     file=$output_folder/temp/temp$num
     rm -f $file
     wget -qO $file.gz ${url:1:${#url}-3}
@@ -26,9 +26,9 @@ for url in $(cat opus.json | grep -Po '"url":\K.*?[^\\]",') ; do
     num=$((num+1))
 done
 
-cat $output_file | grep -P "^\S+ \S+$" | sed "s/ /\t/g" > $output_folder/opus_space_changed_to_tab.tsv
-cat $output_file | grep -Pv "^\S+ \S+$" > output/temp/opus_without_space.tsv
-cat $output_folder/opus_without_space.tsv $output_folder/opus_space_changed_to_tab.tsv | sort -u > $output_file
+cat $output_file | grep -P "^\S+ \S+$" | sed "s/ /\t/g" > $output_folder/opus_temp_space_changed_to_tab.tsv
+cat $output_file | grep -Pv "^\S+ \S+$" > $output_folder/opus_temp_without_space.tsv
+cat $output_folder/opus_temp_without_space.tsv $output_folder/opus_temp_space_changed_to_tab.tsv | sort -u > $output_file
 rm -f $output_folder/opus_temp*
 
-echo "Done."
+echo "File created: " $output_file
