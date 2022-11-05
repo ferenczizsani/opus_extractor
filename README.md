@@ -13,7 +13,7 @@ where `<OUTPUT_FOLDER>` is the desired output path. In case it doesn't exists, t
 
 The output file will be saved as `<OUTPUT_FOLDER>/opus_fi_hu.tsv`
 
-In case the frequency of word pairs should be kept, please, run the following:
+In case the word pairs should be ordered by their co-occurence number (decreasing), please, run the following:
 
 ```
 bash process_opus.sh <OUTPUT_FOLDER> true
